@@ -3,21 +3,22 @@ import sys
 import os
 
 def get_video_info(filename):
-    """Get the duration and frame rate of the video."""
-    # Get the duration
-    duration_result = subprocess.run(
-        ['ffprobe', '-v', 'error', '-show_entries', 'format=duration', 
+    """Get the frame rate and frame count of the video."""
+    # Get frame count
+    framecount_result = subprocess.run(
+        ['ffprobe', '-v', 'error', '-select_streams', 'v:0',
+         '-show_entries', 'stream=nb_frames',
          '-of', 'default=noprint_wrappers=1:nokey=1', filename],
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         text=True
     )
-    duration = float(duration_result.stdout.strip())
+    frame_count = int(framecount_result.stdout.strip())
 
-    # Get the frame rate
+    # Get frame rate
     framerate_result = subprocess.run(
-        ['ffprobe', '-v', 'error', '-select_streams', 'v:0', 
-         '-show_entries', 'stream=avg_frame_rate', 
+        ['ffprobe', '-v', 'error', '-select_streams', 'v:0',
+         '-show_entries', 'stream=avg_frame_rate',
          '-of', 'default=noprint_wrappers=1:nokey=1', filename],
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
@@ -26,15 +27,7 @@ def get_video_info(filename):
     num, den = map(int, framerate_result.stdout.strip().split('/'))
     framerate = num / den if den != 0 else 0
 
-    return duration, framerate
-
-def format_timestamp(seconds, frame_rate):
-    """Format timestamp as HH:MM:SS:frame_count."""
-    hours = int(seconds // 3600)
-    minutes = int((seconds % 3600) // 60)
-    seconds_int = int(seconds % 60)
-    frame_count = int((seconds - int(seconds)) * frame_rate)
-    return f"{hours:02d}:{minutes:02d}:{seconds_int:02d}:{frame_count}"
+    return frame_count, framerate
 
 def reverse_and_append_video(video_path, loops):
     # Temporary files
@@ -50,8 +43,8 @@ def reverse_and_append_video(video_path, loops):
         reversed_video
     ], check=True)
 
-    # Get duration and frame rate of the original video
-    original_duration, frame_rate = get_video_info(video_path)
+    # Get frame count and frame rate of the original video
+    original_frame_count, frame_rate = get_video_info(video_path)
 
     # Create a list file for concatenation
     with open(concat_list_file, 'w') as f:
@@ -65,16 +58,21 @@ def reverse_and_append_video(video_path, loops):
         '-c', 'copy', final_video
     ], check=True)
 
-    # Calculate and print concatenation points
+    # Calculate and print concatenation points in frame count
+    total_frames = 0
     for i in range(loops * 2):
-        concat_point = original_duration * (i + 1)
-        timestamp = format_timestamp(concat_point, frame_rate)
-        print(f"Concatenation point {i+1}: {timestamp}")
+        total_frames += original_frame_count
+        print(f"Concatenation point {i+1}: {total_frames} frames")
 
     # Clean up
     os.remove(reversed_video)
     os.remove(concat_list_file)
 
+    # Print frame counts
+    final_frame_count, _ = get_video_info(final_video)
+    print(f"Original video length: {original_frame_count} frames")
+    print(f"Reversed video length: {original_frame_count} frames")  # Same as original
+    print(f"Final video length: {final_frame_count} frames")
     print(f"Final video saved as {final_video}")
 
 if __name__ == "__main__":
