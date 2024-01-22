@@ -116,6 +116,12 @@ def main(input_video, num_loops):
         trim_video('temp3.mp4', 'temp4.mp4') # temp4 = bigger loop trimmed
         swap_files('temp4.mp4', 'temp2.mp4') # temp2 = bigger loop
 
+    output_path = os.path.splitext(input_video)[0] + f'_looped_{num_loops}.mp4'
+    os.remove('temp1.mp4')
+    os.remove('temp3.mp4')
+    os.remove('temp4.mp4')
+    os.rename('temp2.mp4', output_path)
+
     return
 
 if __name__ == "__main__":
