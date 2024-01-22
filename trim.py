@@ -20,7 +20,7 @@ def trim_audio_duration(video_path, output_file):
     video_duration = get_video_duration(video_path)
 
     cmd = [
-        'ffmpeg', '-i', video_path,
+        'ffmpeg', '-y', '-i', video_path,
         '-af', f'atrim=end={video_duration}',
         '-vcodec', 'copy', output_file
     ]

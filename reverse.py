@@ -13,7 +13,7 @@ def reverse_video(video_path, output_path):
     """Reverse the video and trim it to match the original duration."""
     duration = get_video_duration(video_path)
 
-    subprocess.run(['ffmpeg', '-i', video_path, '-vf', 'reverse', '-af', 'areverse',
+    subprocess.run(['ffmpeg', '-y', '-i', video_path, '-vf', 'reverse', '-af', 'areverse',
                     '-t', str(duration), output_path], check=True)
     print(f"Reversed video saved as {output_path}")
 
