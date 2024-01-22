@@ -9,18 +9,17 @@ def get_video_duration(video_path):
                             stdout=subprocess.PIPE, text=True)
     return float(result.stdout.strip())
 
-def reverse_video(video_path):
+def reverse_video(video_path, output_path):
     """Reverse the video and trim it to match the original duration."""
     duration = get_video_duration(video_path)
-    output_path = os.path.splitext(video_path)[0] + '_reversed.mp4'
 
     subprocess.run(['ffmpeg', '-i', video_path, '-vf', 'reverse', '-af', 'areverse',
                     '-t', str(duration), output_path], check=True)
     print(f"Reversed video saved as {output_path}")
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: python reverse.py <video_path>")
+    if len(sys.argv) != 3:
+        print("Usage: python reverse.py <video_path> <output_file>")
         sys.exit(1)
 
-    reverse_video(sys.argv[1])
+    reverse_video(sys.argv[1], sys.argv[2])
