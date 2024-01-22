@@ -1,6 +1,7 @@
 import subprocess
 import sys
 import json
+import os
 
 def get_video_duration(video_path):
     """Get the duration of the video stream."""
@@ -17,7 +18,8 @@ def get_video_duration(video_path):
 def trim_audio_duration(video_path):
     """Trim the audio duration to match the video duration."""
     video_duration = get_video_duration(video_path)
-    output_file = 'trimmed_' + video_path
+
+    output_file = os.path.splitext(video_path)[0] + '_trimmed.mp4'
     cmd = [
         'ffmpeg', '-i', video_path,
         '-af', f'atrim=end={video_duration}',
