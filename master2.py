@@ -74,25 +74,6 @@ def create_and_trim_large_loop(base_loop, num_loops):
 
     return final_loop
 
-def create_base_loop(input_video):
-    # Step 1: Trim the original input
-    print("Trimming the original input...")
-    trim_video(input_video, 'temp1.mp4')  # Function to trim the input video
-
-    # Step 2: Reverse the trimmed input
-    print("Reversing the trimmed input...")
-    reverse_video('temp1.mp4', 'temp2.mp4')  # Function to reverse the video
-
-    # Step 3: Concatenate trimmed and reversed videos
-    print("Concatenating trimmed and reversed videos...")
-    concatenate_videos('temp1.mp4', 'temp2.mp4', 'temp3.mp4')  # Function to concatenate videos
-    trim_video('temp3.mp4', 'base_loop.mp4')
-
-    # Cleanup temporary files if needed
-    os.remove('temp1.mp4')
-    os.remove('temp2.mp4')
-    os.remove('temp3.mp4')
-
 def main(input_video, num_loops):
     # Step 1: Trim the original input
     print("Trimming the original input...")
