@@ -15,11 +15,11 @@ def remove_file(file_path):
         os.remove(file_path)
         print(f"Removed: {file_path}")
 
-def main(input_video):
+def main(input_video, num_loops):
     trimmed_video = os.path.splitext(input_video)[0] + '_trimmed.mp4'
     reversed_video = os.path.splitext(trimmed_video)[0] + '_reversed.mp4'
     loop_video = os.path.splitext(input_video)[0] + '_loop.mp4'
-    loop_trimmed_video = os.path.splitext(loop_video)[0] + '_trimmed.mp4'
+    loop_trimmed = os.path.splitext(loop_video)[0] + '_trimmed.mp4'
 
     # Step 1: Trim the original input
     print("Trimming the original input...")
@@ -35,16 +35,38 @@ def main(input_video):
 
     # Step 4: Trim the concatenated video (loop)
     print("Trimming the concatenated loop...")
-    trim_video(loop_video)
+    trim_video(loop_video) # outputs loop trimmed
 
-    final = os.path.splitext(input_video)[0] + '_looped.mp4'
-    os.rename(loop_trimmed_video, final)
+    concatenate_videos(loop_trimmed, loop_trimmed, 'test.mp4')
+    trim_video('test.mp4')
+
+    return
+
+    # Step 5: Repeat concatenation and trimming for the number of loops
+    current_loop_video = loop_video
+    for i in range(num_loops - 1):
+        next_loop_video = os.path.splitext(input_video)[0] + f'_loop{i+1}.mp4'
+        print(f"Creating loop {i+1}...")
+        concatenate_videos(current_loop_video, loop_video, next_loop_video)
+
+        # Trim the newly concatenated video
+        print(f"Trimming loop {i+1}...")
+        trim_video(next_loop_video)
+
+        # remove_file(current_loop_video)
+        current_loop_video = os.path.splitext(next_loop_video)[0] + '_trimmed.mp4'
+
+    # Rename the final loop video
+    final = os.path.splitext(input_video)[0] + f'_looped_{num_loops}.mp4'
+    os.rename(current_loop_video, final)
 
     # Cleanup intermediate files
-    remove_file(loop_video)
-    remove_file(trimmed_video)
-    remove_file(reversed_video)
+    # remove_file(trimmed_video)
+    # remove_file(reversed_video)
+    # remove_file(loop_video)  # Only if it's not the final loop video
+
 
 if __name__ == "__main__":
     input_video = 'input.mp4'  # Replace with your video file name or use sys.argv to pass it as an argument
-    main(input_video)
+    num_loops = 2
+    main(input_video, num_loops)
