@@ -94,10 +94,6 @@ def create_base_loop(input_video):
     os.remove('temp3.mp4')
 
 def main(input_video, num_loops):
-    create_base_loop(input_video)
-    create_and_trim_large_loop('base_loop.mp4', num_loops)
-    return
-
     # Step 1: Trim the original input
     print("Trimming the original input...")
     trim_video(input_video, 'temp1.mp4') # trimmed input
