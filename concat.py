@@ -1,4 +1,5 @@
 import subprocess
+import sys
 import os
 
 def concatenate_videos(video1_path, video2_path, output_path):
@@ -20,5 +21,9 @@ def concatenate_videos(video1_path, video2_path, output_path):
     # Clean up the temporary file
     os.remove('concat_list.txt')
 
-# Replace 'video1.mp4' and 'video2.mp4' with the paths to your video files
-concatenate_videos('input.mp4', 'reversed_input.mp4', 'concat.mp4')
+if __name__ == "__main__":
+    if len(sys.argv) != 4:
+        print("Usage: python concatenate.py <video1_path> <video2_path> <output_path>")
+        sys.exit(1)
+
+    concatenate_videos(sys.argv[1], sys.argv[2], sys.argv[3])
