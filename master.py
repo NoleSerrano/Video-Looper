@@ -51,30 +51,6 @@ def main(input_video, num_loops):
 
     return
 
-    # Step 5: Repeat concatenation and trimming for the number of loops
-    current_loop_video = loop_video
-    for i in range(num_loops - 1):
-        next_loop_video = os.path.splitext(input_video)[0] + f'_loop{i+1}.mp4'
-        print(f"Creating loop {i+1}...")
-        concatenate_videos(current_loop_video, loop_video, next_loop_video)
-
-        # Trim the newly concatenated video
-        print(f"Trimming loop {i+1}...")
-        trim_video(next_loop_video)
-
-        # remove_file(current_loop_video)
-        current_loop_video = os.path.splitext(next_loop_video)[0] + '_trimmed.mp4'
-
-    # Rename the final loop video
-    final = os.path.splitext(input_video)[0] + f'_looped_{num_loops}.mp4'
-    os.rename(current_loop_video, final)
-
-    # Cleanup intermediate files
-    # remove_file(trimmed_video)
-    # remove_file(reversed_video)
-    # remove_file(loop_video)  # Only if it's not the final loop video
-
-
 if __name__ == "__main__":
     input_video = 'input.mp4'  # Replace with your video file name or use sys.argv to pass it as an argument
     num_loops = 3
