@@ -16,8 +16,8 @@ def get_video_info(video_path):
     result = subprocess.run(ffprobe_cmd, capture_output=True, text=True)
 
     # Print the raw JSON output for diagnostic purposes
-    print("\nffprobe output for " + video_path + ":")
-    print(result.stdout)
+    # print("\nffprobe output for " + video_path + ":")
+    # print(result.stdout)
 
     if result.returncode == 0:
         try:
@@ -26,10 +26,10 @@ def get_video_info(video_path):
             audio_stream = next((s for s in data['streams'] if s.get('codec_type') == 'audio'), None)
 
                         # Print the video and audio stream data
-            print("\nVideo Stream Data for " + video_path + ":")
-            print(json.dumps(video_stream, indent=4))
-            print("\nAudio Stream Data for " + video_path + ":")
-            print(json.dumps(audio_stream, indent=4))
+            # print("\nVideo Stream Data for " + video_path + ":")
+            # print(json.dumps(video_stream, indent=4))
+            # print("\nAudio Stream Data for " + video_path + ":")
+            # print(json.dumps(audio_stream, indent=4))
 
 
             info = {
