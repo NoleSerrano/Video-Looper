@@ -1,6 +1,7 @@
 import subprocess
 import os
 import shutil
+import math
 
 def swap_files(file1, file2):
     temp_file = file1 + "_temp"
@@ -25,7 +26,76 @@ def remove_file(file_path):
         os.remove(file_path)
         print(f"Removed: {file_path}")
 
+def get_video_duration(video_path):
+    """Get the duration of the video stream."""
+    cmd = [
+        'ffprobe', '-v', 'error',
+        '-select_streams', 'v:0',
+        '-show_entries', 'stream=duration',
+        '-of', 'default=noprint_wrappers=1:nokey=1',
+        video_path
+    ]
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    return float(result.stdout.strip())
+
+def trim_to_duration(video_path, duration_needed, output_path):
+    """Trim the video to the specific duration with re-encoding."""
+    cmd = [
+        'ffmpeg', '-y', '-i', video_path,
+        '-t', str(duration_needed),
+        output_path  # Allow FFmpeg to re-encode the video
+    ]
+    subprocess.run(cmd, check=True)
+
+def create_and_trim_large_loop(base_loop, num_loops):
+    duration_of_one_loop = get_video_duration(base_loop)
+    print(f'duration_of_one_loop = {duration_of_one_loop}')
+
+    current_loop = base_loop
+    loop_size = 1
+
+    # Double the loop until it exceeds or meets the required number of loops
+    while loop_size < num_loops:
+        loop_size *= 2
+        next_loop = f'temp_loop_{loop_size}.mp4'
+        concatenate_videos(current_loop, current_loop, next_loop)
+        trim_video(next_loop, current_loop)
+
+    # Final trimming if the loop size is larger than needed
+    excess_loops = loop_size - num_loops
+    if excess_loops > 0:
+        total_duration_needed = duration_of_one_loop * num_loops
+        final_loop = f'final_loop_{num_loops}.mp4'
+        print('total_duration_needed = {total_duration_needed}')
+        trim_to_duration(current_loop, total_duration_needed, final_loop)
+    else:
+        final_loop = current_loop
+
+    return final_loop
+
+def create_base_loop(input_video):
+    # Step 1: Trim the original input
+    print("Trimming the original input...")
+    trim_video(input_video, 'temp1.mp4')  # Function to trim the input video
+
+    # Step 2: Reverse the trimmed input
+    print("Reversing the trimmed input...")
+    reverse_video('temp1.mp4', 'temp2.mp4')  # Function to reverse the video
+
+    # Step 3: Concatenate trimmed and reversed videos
+    print("Concatenating trimmed and reversed videos...")
+    concatenate_videos('temp1.mp4', 'temp2.mp4', 'temp3.mp4')  # Function to concatenate videos
+    trim_video('temp3.mp4', 'base_loop.mp4')
+
+    # Cleanup temporary files if needed
+    os.remove('temp1.mp4')
+    os.remove('temp2.mp4')
+    os.remove('temp3.mp4')
+
 def main(input_video, num_loops):
+    create_base_loop(input_video)
+    create_and_trim_large_loop('base_loop.mp4', num_loops)
+    return
 
     # Step 1: Trim the original input
     print("Trimming the original input...")
