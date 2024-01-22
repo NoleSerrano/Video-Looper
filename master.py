@@ -18,8 +18,8 @@ def remove_file(file_path):
 def main(input_video):
     trimmed_video = os.path.splitext(input_video)[0] + '_trimmed.mp4'
     reversed_video = os.path.splitext(trimmed_video)[0] + '_reversed.mp4'
-    loop_video = 'loop.mp4'
-    final_trimmed_loop = 'final_trimmed_loop.mp4'
+    loop_video = os.path.splitext(input_video)[0] + '_loop.mp4'
+    loop_trimmed_video = os.path.splitext(loop_video)[0] + '_trimmed.mp4'
 
     # Step 1: Trim the original input
     print("Trimming the original input...")
@@ -37,13 +37,13 @@ def main(input_video):
     print("Trimming the concatenated loop...")
     trim_video(loop_video)
 
-    # Renaming the final trimmed loop to a more descriptive name
-    os.rename(loop_video, final_trimmed_loop)
-    print(f"Final loop created: {final_trimmed_loop}")
+    final = os.path.splitext(input_video)[0] + '_looped.mp4'
+    os.rename(loop_trimmed_video, final)
 
     # Cleanup intermediate files
-    # remove_file(trimmed_video)
-    # remove_file(reversed_video)
+    remove_file(loop_video)
+    remove_file(trimmed_video)
+    remove_file(reversed_video)
 
 if __name__ == "__main__":
     input_video = 'input.mp4'  # Replace with your video file name or use sys.argv to pass it as an argument
