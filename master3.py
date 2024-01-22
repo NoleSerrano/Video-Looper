@@ -88,28 +88,52 @@ def main(input_video, num_loops):
 
     # Step 2: Reverse the trimmed input
     print("Reversing the trimmed input...")
+    start_time = time.time()
     reverse_video('temp1.mp4', 'temp2.mp4') # reversed
+    end_time = time.time()
+    total_reverse_time += (end_time - start_time)
 
     # Step 3: Concatenate trimmed and reversed videos
     print("Concatenating trimmed and reversed videos...")
+    start_time = time.time()
     concatenate_videos('temp1.mp4', 'temp2.mp4', 'temp3.mp4') # looped video
+    end_time = time.time()
+    total_concatenation_time += (end_time - start_time)
 
     # Step 4: Trim the concatenated video (loop)
     print("Trimming the concatenated loop...")
+    start_time = time.time()
     trim_video('temp3.mp4', 'temp1.mp4') # outputs loop trimmed
+    end_time = time.time()
+    total_trim_time += (end_time - start_time)
+
     clone_file('temp1.mp4', 'temp2.mp4') # temp2 will be the big boy
 
     for i in range(num_loops - 1):
+        # Concatenate and trim in the loop
+        start_time = time.time()
         concatenate_videos('temp1.mp4', 'temp2.mp4', 'temp3.mp4') # temp3 = bigger loop
+        end_time = time.time()
+        total_concatenation_time += (end_time - start_time)
+
+        start_time = time.time()
         trim_video('temp3.mp4', 'temp4.mp4') # temp4 = bigger loop trimmed
+        end_time = time.time()
+        total_trim_time += (end_time - start_time)
+        print(f"Trimming time: {total_trim_time} seconds")
+
         swap_files('temp4.mp4', 'temp2.mp4') # temp2 = bigger loop
 
     output_path = os.path.splitext(input_video)[0] + f'_looped_{num_loops}.mp4'
+    shutil.move('temp2.mp4', output_path)
+
     os.remove('temp1.mp4')
     os.remove('temp3.mp4')
     os.remove('temp4.mp4')
-    os.rename('temp2.mp4', output_path)
 
+    print(f"Total Concatenation Time: {total_concatenation_time} seconds")
+    print(f"Total Trimming Time: {total_trim_time} seconds")
+    print(f"Total Reversing Time: {total_reverse_time} seconds")
     return
 
 if __name__ == "__main__":
