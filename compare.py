@@ -115,9 +115,13 @@ if __name__ == "__main__":
         print("Error getting video information.")
         sys.exit(1)
 
+    # Determine the maximum width for the column based on video file names
+    max_name_length = max(len(os.path.basename(path)) for path in video_paths)
+    column_width = max(20, max_name_length)
+
     # Print header
     headers = ['Property'] + [os.path.basename(path) for path in video_paths]
-    header_line = " | ".join([f"{h:<20}" for h in headers])
+    header_line = " | ".join([f"{h:<{column_width}}" for h in headers])
     print(header_line)
     print('-' * len(header_line))
 
@@ -130,6 +134,6 @@ if __name__ == "__main__":
     ]
 
     for prop in properties:
-        line = f"{prop:<20} | "
-        line += " | ".join([f"{info.get(prop, 'N/A'):<20}" for info in video_infos])
+        line = f"{prop:<{column_width}} | "
+        line += " | ".join([f"{info.get(prop, 'N/A'):<{column_width}}" for info in video_infos])
         print(line)

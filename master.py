@@ -42,8 +42,8 @@ def main(input_video):
     print(f"Final loop created: {final_trimmed_loop}")
 
     # Cleanup intermediate files
-    remove_file(trimmed_video)
-    remove_file(reversed_video)
+    # remove_file(trimmed_video)
+    # remove_file(reversed_video)
 
 if __name__ == "__main__":
     input_video = 'input.mp4'  # Replace with your video file name or use sys.argv to pass it as an argument
