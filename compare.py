@@ -1,6 +1,7 @@
 import subprocess
 import json
 import os
+import sys
 
 def get_video_info(video_path):
     ffprobe_cmd = [
@@ -96,7 +97,32 @@ def compare_videos(video1_path, video2_path):
         print(f"{prop:<20} | {val1:<30} | {val2:<30}")
 
 if __name__ == "__main__":
-    input_video_path = "input.mp4"
-    output_video_path = "reversed_input.mp4"
+    if len(sys.argv) < 3:
+        print("Usage: python script.py <video1_path> <video2_path> [more video paths...]")
+        sys.exit(1)
 
-    compare_videos(input_video_path, output_video_path)
+    video_paths = sys.argv[1:]
+    video_infos = [get_video_info(path) for path in video_paths]
+
+    if any(info is None for info in video_infos):
+        print("Error getting video information.")
+        sys.exit(1)
+
+    # Print header
+    headers = ['Property'] + [os.path.basename(path) for path in video_paths]
+    header_line = " | ".join([f"{h:<20}" for h in headers])
+    print(header_line)
+    print('-' * len(header_line))
+
+    # Properties for comparison
+    properties = [
+        'Width', 'Height', 'Frame Rate', 'Video Duration', 'Video Bitrate',
+        'Video Codec', 'Pixel Format', 'Audio Codec', 'Audio Bitrate',
+        'Audio Sample Rate', 'Audio Channels', 'Audio Duration',
+        'Overall Duration', 'Overall Bitrate', 'Frame Count'
+    ]
+
+    for prop in properties:
+        line = f"{prop:<20} | "
+        line += " | ".join([f"{info.get(prop, 'N/A'):<20}" for info in video_infos])
+        print(line)
