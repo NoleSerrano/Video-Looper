@@ -1,6 +1,7 @@
 import subprocess
 import json
 import os
+import sys
 
 def get_video_info(video_path):
     ffprobe_cmd = [
@@ -58,15 +59,20 @@ def get_video_info(video_path):
         print(result.stderr)
         return None
 
-# Replace 'input_video.mp4' with the path to your video file
-video_path = 'input.mp4'
-video_info = get_video_info(video_path)
+if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        video_path = sys.argv[1]
+    else:
+        print("Usage: python script.py <video_path>")
+        sys.exit(1)
 
-# Header with separator line
-headers = ["Video File", video_path]
-print(f"{headers[0]:<20}| {headers[1]}")
-print('-' * 85)
+    video_info = get_video_info(video_path)
 
-if video_info:
-    for key, value in video_info.items():
-        print(f"{key:20}| {value}")
+    # Header with separator line
+    headers = ["Video File", video_path]
+    print(f"{headers[0]:<20}| {headers[1]}")
+    print('-' * 85)
+
+    if video_info:
+        for key, value in video_info.items():
+            print(f"{key:20}| {value}")

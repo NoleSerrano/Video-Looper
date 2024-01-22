@@ -21,4 +21,4 @@ def concatenate_videos(video1_path, video2_path, output_path):
     os.remove('concat_list.txt')
 
 # Replace 'video1.mp4' and 'video2.mp4' with the paths to your video files
-concatenate_videos('input.mp4', 'reversed_input.mp4', 'output.mp4')
+concatenate_videos('input.mp4', 'reversed_input.mp4', 'concat.mp4')
