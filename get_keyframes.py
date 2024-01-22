@@ -11,6 +11,6 @@ def get_keyframe_indices(video_fn):
     return i_frame_indices
 
 if __name__ == '__main__':
-    filename = 'BigBuckBunny.mp4'
+    filename = 'reversed_input.mp4'
     keyframe_indices = get_keyframe_indices(filename)
     print("Keyframe indices:", keyframe_indices)
