@@ -2,6 +2,9 @@ import subprocess
 import json
 import os
 import sys
+import glob
+
+# Can specify multiple videos to compare or if no args are passed, it compares all the mp4 videos in the folder
 
 def get_video_info(video_path):
     ffprobe_cmd = [
@@ -97,11 +100,15 @@ def compare_videos(video1_path, video2_path):
         print(f"{prop:<20} | {val1:<30} | {val2:<30}")
 
 if __name__ == "__main__":
-    if len(sys.argv) < 3:
-        print("Usage: python script.py <video1_path> <video2_path> [more video paths...]")
-        sys.exit(1)
+    # If no arguments are passed, compare all .mp4 files in the current directory
+    if len(sys.argv) == 1:
+        video_paths = glob.glob('*.mp4')
+        if not video_paths:
+            print("No .mp4 files found in the current directory.")
+            sys.exit(1)
+    else:
+        video_paths = sys.argv[1:]
 
-    video_paths = sys.argv[1:]
     video_infos = [get_video_info(path) for path in video_paths]
 
     if any(info is None for info in video_infos):
