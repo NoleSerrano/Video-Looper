@@ -32,7 +32,6 @@ def get_video_info(video_path):
             # print(json.dumps(audio_stream, indent=4))
 
             info = {
-                'Video File': video_path,
                 'Width': video_stream.get('width', 'N/A'),
                 'Height': video_stream.get('height', 'N/A'),
                 'Frame Rate': eval(video_stream['r_frame_rate']) if 'r_frame_rate' in video_stream else 'N/A',
@@ -63,6 +62,11 @@ def get_video_info(video_path):
 video_path = 'input.mp4'
 video_info = get_video_info(video_path)
 
+# Header with separator line
+headers = ["Video File", video_path]
+print(f"{headers[0]:<20}| {headers[1]}")
+print('-' * 85)
+
 if video_info:
     for key, value in video_info.items():
-        print(f"{key:20}: {value}")
+        print(f"{key:20}| {value}")
