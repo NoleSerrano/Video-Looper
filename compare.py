@@ -5,7 +5,7 @@ def get_video_info(video_path):
     ffprobe_cmd = [
         'ffprobe',
         '-v', 'error',
-        '-show_entries', 'stream=index,codec_name,codec_long_name,width,height,r_frame_rate,duration,bit_rate,pix_fmt,codec_type,sample_rate,channels',
+        '-show_entries', 'stream=index,codec_name,width,height,r_frame_rate,duration,bit_rate,pix_fmt,codec_type,sample_rate,channels,nb_frames',
         '-show_entries', 'format=bit_rate,duration',
         '-show_entries', 'stream_tags=color_range,color_space,color_transfer,color_primaries',
         '-of', 'json',
@@ -45,7 +45,8 @@ def get_video_info(video_path):
                 'Audio Channels': audio_stream.get('channels', 'N/A') if audio_stream else 'N/A',
                 'Audio Duration': audio_stream.get('duration', 'N/A') if audio_stream else 'N/A',
                 'Overall Duration': data['format'].get('duration', 'N/A'),
-                'Overall Bitrate': int(data['format'].get('bit_rate', '0')) // 1000  # Convert to kbps
+                'Overall Bitrate': int(data['format'].get('bit_rate', '0')) // 1000 , # Convert to kbps
+                'Frame Count': int(video_stream['nb_frames']) if 'nb_frames' in video_stream and video_stream['nb_frames'].isdigit() else 'N/A'
             }
             # Adding color information if available and if video stream exists
             if video_stream and 'tags' in video_stream:
@@ -81,7 +82,7 @@ def compare_videos(video1_path, video2_path):
     'Width', 'Height', 'Frame Rate', 'Video Duration', 'Video Bitrate',
     'Video Codec', 'Pixel Format', 'Audio Codec', 'Audio Bitrate',
     'Audio Sample Rate', 'Audio Channels', 'Audio Duration',
-    'Overall Duration', 'Overall Bitrate'
+    'Overall Duration', 'Overall Bitrate', 'Frame Count'
 ]
 
     for prop in properties:
