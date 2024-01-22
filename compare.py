@@ -1,5 +1,6 @@
 import subprocess
 import json
+import os
 
 def get_video_info(video_path):
     ffprobe_cmd = [
@@ -73,7 +74,10 @@ def compare_videos(video1_path, video2_path):
         return
 
     # Print header
-    headers = ['Property', 'Video 1', 'Video 2']
+    video1_name = os.path.basename(video1_path)
+    video2_name = os.path.basename(video2_path)
+
+    headers = ['Property', video1_name, video2_name]
     print(f"{headers[0]:<20} | {headers[1]:<30} | {headers[2]:<30}")
     print('-' * 85)
 
