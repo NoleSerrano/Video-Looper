@@ -1,0 +1,3 @@
+* Take input trim it to get rid of audio at the end
+* Reverse the input and then trim that so it also gets rid of the audio at the end
+* Concatenate the two and then trim the concatenation (loop) which will also get rid of the audio at the end
