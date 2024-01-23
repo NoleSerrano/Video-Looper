@@ -101,7 +101,7 @@ def main(input_video, num_loops):
     os.remove('temp1.mp4')
     os.remove('temp3.mp4')
     os.remove('temp4.mp4')
-    os.rename('temp2.mp4', output_path)
+    shutil.move('temp2.mp4', output_path)
 
     return
 
