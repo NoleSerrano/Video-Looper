@@ -69,35 +69,6 @@ def get_video_info(video_path):
         print(f"Error running ffprobe for {video_path}:")
         print(result.stderr)
         return None
-     
-def compare_videos(video1_path, video2_path):
-    video1_info = get_video_info(video1_path)
-    video2_info = get_video_info(video2_path)
-
-    if video1_info is None or video2_info is None:
-        return
-
-    # Print header
-    video1_name = os.path.basename(video1_path)
-    video2_name = os.path.basename(video2_path)
-
-    headers = ['Property', video1_name, video2_name]
-    print(f"{headers[0]:<20} | {headers[1]:<30} | {headers[2]:<30}")
-    print('-' * 85)
-
-    # Properties for comparison
-    properties = [
-    'Width', 'Height', 'Frame Rate', 'Video Duration', 'Video Bitrate',
-    'Video Codec', 'Pixel Format', 'Audio Codec', 'Audio Bitrate',
-    'Audio Sample Rate', 'Audio Channels', 'Audio Duration',
-    'Overall Duration', 'Overall Bitrate', 'Frame Count'
-]
-
-    for prop in properties:
-        # Fetch properties safely, some might not be present
-        val1 = video1_info.get(prop, 'N/A')
-        val2 = video2_info.get(prop, 'N/A')
-        print(f"{prop:<20} | {val1:<30} | {val2:<30}")
 
 if __name__ == "__main__":
     # If no arguments are passed, compare all .mp4 files in the current directory
