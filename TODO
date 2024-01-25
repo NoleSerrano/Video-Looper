@@ -2,3 +2,4 @@ Ensure sample rates are consistent for vidoes (pcm.py can be a culprite 44.1 vs 
 
 Potentially new process
 * Run fix_audio.py to reencode the video and get pcm. Also, the audio duration of the video matches the video's duration.
+* Then run that processed video file through the reverse2.py, and they will have the same durations
