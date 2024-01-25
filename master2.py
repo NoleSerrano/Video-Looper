@@ -107,7 +107,7 @@ def main(input_video, num_loops):
 
 if __name__ == "__main__":
     input_video = 'input.mp4'  # Replace with your video file name or use sys.argv to pass it as an argument
-    num_loops = 3
+    num_loops = 6
     start_time = time.time()
     main(input_video, num_loops)
     end_time = time.time()
