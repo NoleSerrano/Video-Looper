@@ -100,12 +100,18 @@ def main(input_video, num_loops):
 
     # Step 3: Concatenate and reversed videos
     print("Concatenating trimmed and reversed videos...")
-    concatenate_videos(['temp1.mp4', 'temp2.mp4'], 'temp3.mp4', num_loops) # looped video
+    output_path = os.path.splitext(input_video)[0] + f'_looped_{num_loops}.mp4'
+    concatenate_videos(['temp1.mp4', 'temp2.mp4'], output_path, num_loops) # looped video
 
+    os.remove('temp1.mp4')
+    os.remove('temp2.mp4')
 
     return
 
 if __name__ == "__main__":
-    input_video = 'input.mp4'  # Replace with your video file name or use sys.argv to pass it as an argument
-    num_loops = 6
+    if len(sys.argv) < 3:
+        print("Usage: python script.py <video> <num_loops>")
+        sys.exit(1)
+    input_video = sys.argv[1]  # Replace with your video file name or use sys.argv to pass it as an argument
+    num_loops = int(sys.argv[2])
     main(input_video, num_loops)
