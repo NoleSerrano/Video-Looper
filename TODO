@@ -1,0 +1,1 @@
+Ensure sample rates are consistent for vidoes (pcm.py can be a culprite 44.1 vs 48) and also match channels (stereo or mono?)
