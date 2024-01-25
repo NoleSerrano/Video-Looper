@@ -1,1 +1,4 @@
 Ensure sample rates are consistent for vidoes (pcm.py can be a culprite 44.1 vs 48) and also match channels (stereo or mono?)
+
+Potentially new process
+* Run fix_audio.py to reencode the video and get pcm. Also, the audio duration of the video matches the video's duration.
