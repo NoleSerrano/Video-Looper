@@ -6,6 +6,7 @@
 *.mp4
 *.webm
 *.ts
+*.mkv
 
 # Networking
 Network/browsermob-proxy-2.1.4/
