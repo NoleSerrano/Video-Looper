@@ -3,3 +3,7 @@ Ensure sample rates are consistent for vidoes (pcm.py can be a culprite 44.1 vs 
 Potentially new process
 * Run fix_audio.py to reencode the video and get pcm. Also, the audio duration of the video matches the video's duration.
 * Then run that processed video file through the reverse2.py, and they will have the same durations
+
+Weird Things
+* If you reverse the reversed video in step 2 and put it in Davinci Resolve, it will show that the audio is offset weirdly, however, if you play
+  the video you can hear that it's the same
