@@ -3,8 +3,20 @@ import json
 import os
 import sys
 import glob
+import math
 
 # Can specify multiple videos to compare or if no args are passed, it compares all the mp4 videos in the folder
+
+def get_readable_file_size(file_path):
+    """Return file size in a human-readable format."""
+    size_bytes = os.path.getsize(file_path)
+    if size_bytes == 0:
+        return "0B"
+    size_names = ["B", "KB", "MB", "GB", "TB"]
+    i = int(math.floor(math.log(size_bytes, 1024)))
+    p = math.pow(1024, i)
+    s = round(size_bytes / p, 2)
+    return f"{s} {size_names[i]}"
 
 def get_video_info(video_path):
     ffprobe_cmd = [
@@ -51,8 +63,10 @@ def get_video_info(video_path):
                 'Audio Duration': audio_stream.get('duration', 'N/A') if audio_stream else 'N/A',
                 'Overall Duration': data['format'].get('duration', 'N/A'),
                 'Overall Bitrate': int(data['format'].get('bit_rate', '0')) // 1000 , # Convert to kbps
-                'Frame Count': int(video_stream['nb_frames']) if 'nb_frames' in video_stream and video_stream['nb_frames'].isdigit() else 'N/A'
+                'Frame Count': int(video_stream['nb_frames']) if 'nb_frames' in video_stream and video_stream['nb_frames'].isdigit() else 'N/A',
+                'File Size' : get_readable_file_size(video_path)
             }
+
             # Adding color information if available and if video stream exists
             if video_stream and 'tags' in video_stream:
                 info.update({
@@ -101,7 +115,7 @@ if __name__ == "__main__":
         'Width', 'Height', 'Frame Rate', 'Video Duration', 'Video Bitrate',
         'Video Codec', 'Pixel Format', 'Audio Codec', 'Audio Bitrate',
         'Audio Sample Rate', 'Audio Channels', 'Audio Duration',
-        'Overall Duration', 'Overall Bitrate', 'Frame Count'
+        'Overall Duration', 'Overall Bitrate', 'Frame Count', 'File Size'
     ]
 
     for prop in properties:
