@@ -12,14 +12,15 @@ def swap_files(file1, file2):
 def clone_file(source_path, destination_path):
     shutil.copy2(source_path, destination_path)
 
-def concatenate_videos(video_files, output_file):
+def concatenate_videos(video_files, output_file, count):
     temp_file = 'concat_list.txt'
 
     try:
-        # Create a temporary file listing all videos to be concatenated
+        # Create a temporary file listing all videos to be concatenated, repeated by count
         with open(temp_file, 'w') as file:
-            for video in video_files:
-                file.write(f"file '{video}'\n")
+            for _ in range(count):
+                for video in video_files:
+                    file.write(f"file '{video}'\n")
 
         # Construct the FFmpeg command
         command = [
@@ -99,7 +100,7 @@ def main(input_video, num_loops):
 
     # Step 3: Concatenate and reversed videos
     print("Concatenating trimmed and reversed videos...")
-    concatenate_videos('temp1.mp4', 'temp2.mp4', 'temp3.mp4') # looped video
+    concatenate_videos(['temp1.mp4', 'temp2.mp4'], 'temp3.mp4', num_loops) # looped video
 
 
     return
